@@ -34,41 +34,28 @@ app.listen(3000, () => {
 //Setup static directory to serve
 app.use(express.static(publicDirectoryPath))
 
-//Home Page
-app.get('', (req, res) => {
-    res.render('index', {
-        title: 'Booking Website',
-        name: 'Antonio Chelala'
-    })
-})
-
-// Admin Page
-app.get('/admin', (req, res) => {
-    res.render('admin', {
-        title: 'Admin',
-        name: 'Antonio Chelala',
-        helpText: "This is the Admin Page"
-    })
-})
-
-//match anything that has not been matched so far => this is the meaning of the wildcard *
-app.get('*', (req, res) => {
-    res.render('404', {
-        title: '404',
-        name: 'Antonio Chelala',
-        errorMessage: 'Page not found',
-    })
-})
-
-
 //setting up MongoDB connection
 
 MongoClient.connect(connectionURL, { useUnifiedTopology: true }, (error, client) => {
+
     if (error) {
         return console.log('Unable to connect to database')
     }
 
-    console.log('Connected')
-
+    console.log('Successfully connected!')
     const db = client.db(databaseName)
+
+    db.collection('Vendors').insertOne({
+        name: 'C-Bo',
+        city: 'Beirut',
+        country: 'Lebanon'
+
+    }, (error, result) => {
+        if (error) {
+            return console.log('Unable to insert vendor')
+        }
+        console.log(result.ops)
+
+    })
+
 })
